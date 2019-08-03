@@ -1,0 +1,27 @@
+{
+  "name": "wrike-integration-with-ibm-bpm",
+  "version": "1.0.0",
+  "description": "Wrike integration with IBM BPM",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dlevytskyi/Wrike-integration-with-IBM-BPM.git"
+  },
+  "keywords": [
+    "Wrike",
+    "IBM",
+    "BPM",
+    "Process",
+    "Portal",
+    "Integration"
+  ],
+  "author": "THE PRIDE",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dlevytskyi/Wrike-integration-with-IBM-BPM/issues"
+  },
+  "homepage": "https://github.com/dlevytskyi/Wrike-integration-with-IBM-BPM#readme"
+}
