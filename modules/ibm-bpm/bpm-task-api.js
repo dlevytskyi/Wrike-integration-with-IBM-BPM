@@ -1,6 +1,6 @@
 let https = require('https');
-const IBM_BPM_CONFIG = require('./configuration/consts.js').IBM_BPM_CONFIG;
-const IBM_BPM_API_PATHS_METHODS = require('./configuration/consts.js')
+const IBM_BPM_CONFIG = require('../configuration/consts.js').IBM_BPM_CONFIG;
+const IBM_BPM_API_PATHS_METHODS = require('../configuration/consts.js')
   .IBM_BPM_API_PATHS_AND_METHODS;
 
 function getTaskList() {
@@ -78,5 +78,6 @@ function buildRequestOptions(path, method) {
 }
 
 module.exports = {
+  getTaskList,
   getUserDetails
 };

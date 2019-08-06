@@ -1,6 +1,6 @@
 let https = require('https');
-const WRIKE_CONFIG = require('./configuration/consts.js').WRIKE_CONFIG;
-const API_PATHS_METHODS = require('./configuration/consts.js').WRIKE_API_PATHS_AND_METHODS;
+const WRIKE_CONFIG = require('../configuration/consts.js').WRIKE_CONFIG;
+const API_PATHS_METHODS = require('../configuration/consts.js').WRIKE_API_PATHS_AND_METHODS;
 
 function getFoldersTree() {
   const path = API_PATHS_METHODS.getFoldersTree.path;
