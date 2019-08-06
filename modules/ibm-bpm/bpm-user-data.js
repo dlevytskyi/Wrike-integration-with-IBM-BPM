@@ -16,7 +16,7 @@ function getUserDetails(userName) {
 
   const method = IBM_BPM_API_PATHS_METHODS.getUserDetails.method;
   const requestOptions = buildRequestOptions(path, method);
-  console.dir(requestOptions);
+
   let req = https.request(requestOptions, function(res) {
     let body = [];
     res
@@ -25,7 +25,7 @@ function getUserDetails(userName) {
       })
       .on('end', function() {
         body = Buffer.concat(body);
-        console.log(body.toString('utf8'));
+        console.log(JSON.parse(body.toString()));
       });
   });
   req.end();
@@ -38,13 +38,7 @@ function buildRequestOptions(path, method) {
     agent: false,
     hostname: IBM_BPM_CONFIG.hostname,
     path: IBM_BPM_CONFIG.apiBasePath + path,
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    // auth: {
-    //   user: IBM_BPM_CONFIG.user,
-    //   pass: IBM_BPM_CONFIG.pass
-    // },
+    headers: { Cookie: IBM_BPM_CONFIG.cookie },
     method: method
   };
   return requestOptions;
