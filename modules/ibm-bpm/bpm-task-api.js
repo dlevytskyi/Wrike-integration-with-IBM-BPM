@@ -54,7 +54,10 @@ function getUserDetails(userName) {
       })
       .on('end', function() {
         body = Buffer.concat(body);
-        //console.log(JSON.parse(body.toString()));
+        let data = JSON.parse(body.toString()).data;
+        console.log('!!!!!!!!!!!!!!');
+        console.dir(data);
+        return data;
       });
   });
   req.end();
