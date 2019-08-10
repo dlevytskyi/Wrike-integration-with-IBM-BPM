@@ -24,8 +24,8 @@ function getTaskList() {
       .on('end', function() {
         body = Buffer.concat(body);
         let data = JSON.parse(body.toString()).data.data;
-        console.log('!!!!!!!!!!!!!!');
-        console.dir(data[0]);
+        //console.log('!!!!!!!!!!!!!!');
+        //console.dir(data[2]);
         return data;
       });
   });
@@ -55,8 +55,8 @@ function getUserDetails(userName) {
       .on('end', function() {
         body = Buffer.concat(body);
         let data = JSON.parse(body.toString()).data;
-        console.log('!!!!!!!!!!!!!!');
-        console.dir(data);
+        //console.log('!!!!!!!!!!!!!!');
+        //console.dir(data);
         return data;
       });
   });

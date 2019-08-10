@@ -1,8 +1,9 @@
 let https = require('https');
 const WRIKE_CONFIG = require('../configuration/consts.js').WRIKE_CONFIG;
 const API_PATHS_METHODS = require('../configuration/consts.js').WRIKE_API_PATHS_AND_METHODS;
+//const INTEGRATION = require('../integration/integration.js');
 
-function getFoldersTree() {
+let getFoldersTree = new Promise(function(resolve, reject) {
   const path = API_PATHS_METHODS.getFoldersTree.path;
   const method = API_PATHS_METHODS.getFoldersTree.method;
   const requestOptions = buildRequestOptions(path, method);
@@ -14,37 +15,67 @@ function getFoldersTree() {
       })
       .on('end', function() {
         body = Buffer.concat(body);
-        console.log(JSON.parse(body.toString()));
+        resolve(JSON.parse(body.toString()).data);
+      })
+      .on('error', error => {
+        reject(error);
       });
   });
   req.end();
-}
+});
 
-// getFoldersTree();
 //IEAC3OXWI7777777
 // createFolder('IEAC3OXWI7777777', 'AWESOME FOLDER');
-function getFolder() {}
+
+let getFolder = function(folderId) {
+  return new Promise(function(resolve, reject) {
+    const path = API_PATHS_METHODS.getFolder.path.replace('{folderId}', folderId);
+    const method = API_PATHS_METHODS.getFolder.method;
+    const requestOptions = buildRequestOptions(path, method);
+    let req = https.request(requestOptions, function(res) {
+      let body = [];
+      res
+        .on('data', function(data) {
+          body.push(data);
+        })
+        .on('end', function() {
+          body = Buffer.concat(body);
+          resolve(JSON.parse(body.toString()).data);
+        })
+        .on('error', error => {
+          reject(error);
+        });
+    });
+    req.end();
+  });
+};
 
 function createFolder(folderId, title) {
-  const path = encodeURI(
-    API_PATHS_METHODS.createFolder.path.replace('{folderId}', folderId) + '?title=' + title
-  );
-  const method = API_PATHS_METHODS.createFolder.method;
-  const requestOptions = buildRequestOptions(path, method);
-  let req = https.request(requestOptions, function(res) {
-    let body = [];
-    res
-      .on('data', function(data) {
-        body.push(data);
-      })
-      .on('end', function(data) {
-        body = Buffer.concat(body);
-      });
+  return new Promise(function(resolve, reject) {
+    const path = encodeURI(
+      API_PATHS_METHODS.createFolder.path.replace('{folderId}', folderId) + '?title=' + title
+    );
+    const method = API_PATHS_METHODS.createFolder.method;
+    const requestOptions = buildRequestOptions(path, method);
+    let req = https.request(requestOptions, function(res) {
+      let body = [];
+      res
+        .on('data', function(data) {
+          body.push(data);
+        })
+        .on('end', function() {
+          body = Buffer.concat(body);
+          resolve(JSON.parse(body.toString()).data);
+        })
+        .on('error', error => {
+          reject(error);
+        });
+    });
+    req.end();
   });
-  req.end();
 }
 
-createTask('IEAC3OXWI4LMISQ5', 'AWESOME TASK 2');
+//createTask('IEAC3OXWI4LMISQ5', 'AWESOME TASK 2');
 
 function createTask(folderId, title) {
   const path = encodeURI(
@@ -60,7 +91,7 @@ function createTask(folderId, title) {
       })
       .on('end', function(data) {
         body = Buffer.concat(body);
-        console.log(JSON.parse(body.toString()));
+        //console.log(JSON.parse(body.toString()));
       });
   });
   req.end();
