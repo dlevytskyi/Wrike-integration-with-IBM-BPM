@@ -1,44 +1,45 @@
 let https = require('https');
 const WRIKE_CONFIG = require('../configuration/consts.js').WRIKE_CONFIG;
 const API_PATHS_METHODS = require('../configuration/consts.js').WRIKE_API_PATHS_AND_METHODS;
-//const INTEGRATION = require('../integration/integration.js');
 
-let getFoldersTree = new Promise(function(resolve, reject) {
-  const path = API_PATHS_METHODS.getFoldersTree.path;
-  const method = API_PATHS_METHODS.getFoldersTree.method;
-  const requestOptions = buildRequestOptions(path, method);
-  let req = https.request(requestOptions, function(res) {
-    let body = [];
-    res
-      .on('data', function(data) {
-        body.push(data);
-      })
-      .on('end', function() {
-        body = Buffer.concat(body);
-        resolve(JSON.parse(body.toString()).data);
-      })
-      .on('error', error => {
-        reject(error);
-      });
+let getFoldersTree = function () {
+  return new Promise(function (resolve, reject) {
+    const path = API_PATHS_METHODS.getFoldersTree.path;
+    const method = API_PATHS_METHODS.getFoldersTree.method;
+    const requestOptions = buildRequestOptions(path, method);
+    let req = https.request(requestOptions, function (res) {
+      let body = [];
+      res
+        .on('data', function (data) {
+          body.push(data);
+        })
+        .on('end', function () {
+          body = Buffer.concat(body);
+          resolve(JSON.parse(body.toString()).data);
+        })
+        .on('error', error => {
+          reject(error);
+        });
+    });
+    req.end();
   });
-  req.end();
-});
+}
 
 //IEAC3OXWI7777777
 // createFolder('IEAC3OXWI7777777', 'AWESOME FOLDER');
 
-let getFolder = function(folderId) {
-  return new Promise(function(resolve, reject) {
+let getFolder = function (folderId) {
+  return new Promise(function (resolve, reject) {
     const path = API_PATHS_METHODS.getFolder.path.replace('{folderId}', folderId);
     const method = API_PATHS_METHODS.getFolder.method;
     const requestOptions = buildRequestOptions(path, method);
-    let req = https.request(requestOptions, function(res) {
+    let req = https.request(requestOptions, function (res) {
       let body = [];
       res
-        .on('data', function(data) {
+        .on('data', function (data) {
           body.push(data);
         })
-        .on('end', function() {
+        .on('end', function () {
           body = Buffer.concat(body);
           resolve(JSON.parse(body.toString()).data);
         })
@@ -51,21 +52,21 @@ let getFolder = function(folderId) {
 };
 
 function createFolder(folderId, title) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     const path = encodeURI(
       API_PATHS_METHODS.createFolder.path.replace('{folderId}', folderId) + '?title=' + title
     );
     const method = API_PATHS_METHODS.createFolder.method;
     const requestOptions = buildRequestOptions(path, method);
-    let req = https.request(requestOptions, function(res) {
+    let req = https.request(requestOptions, function (res) {
       let body = [];
       res
-        .on('data', function(data) {
+        .on('data', function (data) {
           body.push(data);
         })
-        .on('end', function() {
+        .on('end', function () {
           body = Buffer.concat(body);
-          resolve(JSON.parse(body.toString()).data);
+          resolve(JSON.parse(body.toString()).data[0]);
         })
         .on('error', error => {
           reject(error);
@@ -83,13 +84,13 @@ function createTask(folderId, title) {
   );
   const method = API_PATHS_METHODS.createTask.method;
   const requestOptions = buildRequestOptions(path, method);
-  let req = https.request(requestOptions, function(res) {
+  let req = https.request(requestOptions, function (res) {
     let body = [];
     res
-      .on('data', function(data) {
+      .on('data', function (data) {
         body.push(data);
       })
-      .on('end', function(data) {
+      .on('end', function (data) {
         body = Buffer.concat(body);
         //console.log(JSON.parse(body.toString()));
       });
