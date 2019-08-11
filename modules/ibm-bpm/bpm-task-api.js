@@ -30,7 +30,7 @@ let getTaskList = function(bpdName) {
           resolve(JSON.parse(body.toString()).data.data);
         })
         .on('error', error => {
-          logger.info(`[BPM] GET TASK LIST ERROR:${error}`);
+          logger.error(`[BPM] GET TASK LIST ERROR:${error}`);
           reject(error);
         });
     });
@@ -38,7 +38,7 @@ let getTaskList = function(bpdName) {
   });
 };
 
-function getUserDetails(userName) {
+let getUserDetails = function (userName) {
   logger.info('[BPM] GET USER DETAILS');
   const path = encodeURI(
     IBM_BPM_API_PATHS_METHODS.getUserDetails.path +
