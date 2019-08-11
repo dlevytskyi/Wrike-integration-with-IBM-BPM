@@ -24,6 +24,10 @@ const WRIKE_API_PATHS_AND_METHODS = {
     path: '/folders/{folderId}/folders',
     method: 'POST'
   },
+  getTasksFromFolder: {
+    path: '/folders/{folderId}/tasks',
+    method: 'GET'
+  },
   createTask: {
     path: '/folders/{folderId}/tasks',
     method: 'POST'

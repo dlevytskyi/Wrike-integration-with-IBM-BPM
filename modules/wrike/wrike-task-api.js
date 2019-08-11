@@ -78,6 +78,29 @@ function createFolder(folderId, title) {
 
 //createTask('IEAC3OXWI4LMISQ5', 'AWESOME TASK 2');
 
+let getTasksFromFolder = function (folderId) {
+  return new Promise(function (resolve, reject) {
+    const path = API_PATHS_METHODS.getTasksFromFolder.path.replace('{folderId}', folderId);
+    const method = API_PATHS_METHODS.getTasksFromFolder.method;
+    const requestOptions = buildRequestOptions(path, method);
+    let req = https.request(requestOptions, function (res) {
+      let body = [];
+      res
+        .on('data', function (data) {
+          body.push(data);
+        })
+        .on('end', function () {
+          body = Buffer.concat(body);
+          resolve(JSON.parse(body.toString()).data);
+        })
+        .on('error', error => {
+          reject(error);
+        });
+    });
+    req.end();
+  });
+}
+
 function createTask(folderId, title) {
   const path = encodeURI(
     API_PATHS_METHODS.createTask.path.replace('{folderId}', folderId) + '?title=' + title
@@ -111,6 +134,7 @@ function buildRequestOptions(path, method) {
 }
 
 module.exports = {
+  getTasksFromFolder,
   createTask,
   createFolder,
   getFolder,
