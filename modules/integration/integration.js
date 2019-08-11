@@ -156,9 +156,7 @@ async function createOrUpdateTasks(ibm_bpm_integration_folder) {
   }
 }
 
-async function mainApp() {
-  let integration_folder = await prepareIntegrationFolder();
-  createOrUpdateTasks(integration_folder);
-}
-
-mainApp();
+module.exports = {
+  prepareIntegrationFolder,
+  createOrUpdateTasks
+};

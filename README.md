@@ -1,47 +1,31 @@
 # Wrike-integration-with-IBM-BPM
 
-Wrike integration with IBM BPM
+'Wrike integration with IBM BPM' extension app.
 
-## Connection to Wrike
+Application integrate and synchronize tasks betweend two systems: Wrike and IBM BPM.
 
-We are using v4 REST API
+Extension ask IBM BPM application about new task every some configurable period.
 
-## Connection to IBM BPM
+Extension create in Wrike 'Shared with me folder' next structure:
 
-We are using REST API
+- Under 'Root' folder > 'IBM BPM Integration' folder
+- Under 'IBM BPM Integration' folder > folders which means processes in IBM BPM.
+- Next step is adding tasks to the Process Folders and assign to Wrike User Groups
 
-[Correct link syntax](https://www.example.com/)
+- Application will create all structures in first iteration,
+  next iterations will update data.
+- Application generate url to IBM Process Center where user will continue work on task.
 
-```bash
-#!/bin/bash
-echo Hello world
-```
+## IBM BPM
 
-Some text
+IBM BPM is a platform designed to optimize business processes. It allows users to streamline and manage tasks and track performance.
 
-```
-Code block
-```
+IBM BPM organizes, manages, monitors and deploys process artifacts, applications and services from the business process management program,
+with a set of adapters so users can service-enable their assets including packaged,
+custom and heritage applications, technology protocols and databases.
 
-```javascript
-console.log('last name  -', user.lastName);
-```
+### New IBM Product is BAW, which contain IBM BPM
 
-Some text.
+Extension is compatable with BAW.
 
-    # Indented code
-
-More text.
-
-Some more text
-
-- Item 1
-- Item 2
-- Item 3
-
-* Item 1
-  - Item 2
-    - Item 3
-  - Item 4
-* Item 4
-  - Item 5
+[More about BAW](https://www.ibm.com/products/business-automation-workflow)

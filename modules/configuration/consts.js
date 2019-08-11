@@ -2,7 +2,11 @@ const WRIKE_TOKEN =
   'eyJ0dCI6InAiLCJhbGciOiJIUzI1NiIsInR2IjoiMSJ9.eyJkIjoie1wiYVwiOjI5OTY5ODIsXCJpXCI6NjQzNjk0NyxcImNcIjo0NjEyOTIzLFwidVwiOjY0MjY0MDIsXCJyXCI6XCJVU1wiLFwic1wiOltcIldcIixcIkZcIixcIklcIixcIlVcIixcIktcIixcIkNcIixcIkFcIixcIkxcIl0sXCJ6XCI6W10sXCJ0XCI6MH0iLCJpYXQiOjE1NjQ4MzcyMjd9.t3-onBAJTPicQNFumsFz-a0mIt31MkHKBHJwZeFy9e4';
 
 const IBM_BPM_COOKIE =
-  'userContext=0|pl|1; notice_preferences=2:; notice_gdpr_prefs=0|1|2:; DBDM_NP_MIG=1; notice_behavior=expressed|eu; BMAID=a51a6abc-ee52-4518-ae52-f603d1668775; CoreID6=72197140811815655329669&ci=50200000|Digital Business Automation on Cloud Login; CoreM_State=49~-1~-1~-1~-1~3~3~5~3~3~7~7~|~~|~~|~~|~||||||~|~~|~~|~~|~~|~~|~~|~~|~; CoreM_State_Content=6~|~~|~|; pageviewContext=96a31b6d-c33c-4308-a37c-1e2c9b6f07ad; OPTOUTMULTI=0:0%7Cc1:1%7Cc2:0%7Cc3:0; utag_main=v_id:016c80bf1c31003f158bc8ff77f403079015107100ac2$_sn:4$_ss:0$_st:1565546162520$is_country_member_of_eu:true$dc_visit:4$ses_id:1565544358028%3Bexp-session$_pn:1%3Bexp-session$mm_sync:1%3Bexp-session$dc_event:2%3Bexp-session$dc_region:eu-central-1%3Bexp-session; 50200000_clogin=v=1&l=86625731565544358124&e=1565546215233; PD-S-SESSION-ID=hYFcfR1dDb3hhaR35844PQ==:1_2_1_qUdMY8cDcx6iw7j6t0BLGKxLREUA5dmG281emo8envy8Z6Ax|; PD-ID=a4Yz4q1Miql97hYkXJsis+jIFaP84Jps+soUlwPQQB6ipYylqbDDj/iRzRwFaXEG57KwjEi/ScdVQzmkj9oHCJNdiIm/Y7nalbXZAqG4jRO9cRtmFmDedndJq/QXcLVekVP5d7Dw2jRXFnxmfj0+Guoz9yk7ZnxuagpXQuiisDNgxypGguw7ZQvpBF8odhhIkMmjakNcPE6M8N54fJ8NzksEWZHilK46IFnBLjBunA0+2q0jg8mIxj0K+k4eJ336vb6GASIG12+rRXnYGcSgS7wdtaZ8cZb2BMP8RsZUPGwAmBJ9dWId7n248bN2252WSIkez5+5LpukC7yTAsiGmQ==';
+  'ibm.bpm.timezoneOffset=-120; com.ibm.bpm.servlet.LaunchDashboardServlet.defaultAvatarKey=946681200000; BAYEUX_BROWSER=d044-fc8conqtfxxhjz746psj1550; lombardi.locale.name=en; PD-ID=VnQAqdXudOftAYe8kOu4WBwtjddNbssfButVGFLhjT3sKt6n0+iwaFTZhW+klz1OhwZxct5D1St4IH3fK0gkBticFrYg0/lsql8XRiVZogsbZlVTvhu6kAuIZ67m5wMElSDaWM8t56GwDBJ1HKw3dmO1X6rM5iF46vwUzTjnbcvXHGat6kfDhM0OEstDocXqpc3Ww/m92yI0LHntwmPP1Lvzp8C5HcZuk6PXaGR3WWlDmDEvZ8Rig2NiiGDDIdOMldL0vSgPVdjMBqM7u7dBasCT7qn0N5v9A6EVbYODl/fWQGlk8H6hvuOkhR2BpjEEyz9JTLnWgkmKy5wj0I4LKw==; PD-S-SESSION-ID=hYFcfR1dDb3hhaR35844PQ==:1_2_1_KjBiJ5b9WVWhQ1xYELrckql9X9bqXR3EANyhZuyyND9BLrUI|; 50200000_clogin=l=83570401565527518766&v=1&e=1565529322421; OPTOUTMULTI=0:0%7Cc1:1%7Cc2:0%7Cc3:0; utag_main=v_id:016c48b2fdb0002035bf150054600107700c206f00838$_sn:17$_ss:0$_st:1565529321676$is_country_member_of_eu:true$dc_visit:16$ses_id:1565527518678%3Bexp-session$_pn:1%3Bexp-session$mm_sync:1%3Bexp-session$dc_event:2%3Bexp-session$dc_region:eu-central-1%3Bexp-session; cmapi_cookie_privacy=permit_1_required; cmapi_gtm_bl=ga-ms-ua-ta-asp-bzi-sp-awct-cts-csm-img-flc-fls-mpm-mpr-m6d-tc-tdc; notice_behavior=expressed|eu; notice_gdpr_prefs=0|1|2:; notice_preferences=2:; pageviewContext=8e3518e4-90b8-45b4-8970-69b113968a4e; userContext=0|pl|1; CoreID6=74434355152615654631483&ci=50200000|Digital Business Automation on Cloud Login; CoreM_State=65~-1~-1~-1~-1~3~3~5~3~3~7~7~|~~|~~|~~|~||||||~|~~|~~|~~|~~|~~|~~|~~|~; CoreM_State_Content=6~|~~|~|; BMAID=af318862-8031-4d52-84ba-e76e774c3aa5; optimizelyEndUserId=oeu1564857180891r0.9458766506394406'
+
+const APP_CONFIG = {
+  interval_min: 2
+}
 
 const WRIKE_CONFIG = {
   hostname: 'www.wrike.com',
@@ -83,5 +87,6 @@ module.exports = {
   IBM_BPM_PROCESSES,
   WRIKE_CONFIG,
   WRIKE_API_PATHS_AND_METHODS,
-  INTEGRATION_VARIABLES
+  INTEGRATION_VARIABLES,
+  APP_CONFIG
 };
