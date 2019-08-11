@@ -48,11 +48,17 @@ let getFolder = function(folderId) {
   });
 };
 
-function createFolder(folderId, title) {
+function createFolder(folderId, parameters) {
   return new Promise(function(resolve, reject) {
-    const path = encodeURI(
-      API_PATHS_METHODS.createFolder.path.replace('{folderId}', folderId) + '?title=' + title
-    );
+    let url = API_PATHS_METHODS.createFolder.path.replace('{folderId}', folderId);
+
+    //BUILD URL
+    if (parameters.title == undefined) throw 'createFolder: title is required';
+    url += '?title=' + parameters.title;
+
+    if (parameters.members != undefined) url += `&shareds=[${parameters.members}]`;
+
+    const path = encodeURI(url);
     const method = API_PATHS_METHODS.createFolder.method;
     const requestOptions = buildRequestOptions(path, method);
     let req = https.request(requestOptions, function(res) {
@@ -111,8 +117,9 @@ let createTask = function(folderId, parameters) {
     url += `&customFields=[{"id": "IEAC3OXWJUABBTIG", "value": ${parameters.taskId}}]`;
     if (parameters.status == undefined) throw 'CreateTask: status is required';
     url += `&status=${parameters.status}`;
+    if (parameters.members == undefined) throw 'CreateTask: group members are required';
+    url += `&shareds=[${parameters.members}]`;
     if (parameters.importance != undefined) url += `&importance=${parameters.importance}`;
-
     const path = encodeURI(url);
     const method = API_PATHS_METHODS.createTask.method;
     const requestOptions = buildRequestOptions(path, method);
@@ -144,6 +151,7 @@ let modifyTask = function(taskId, parameters) {
     if (parameters.title != undefined) url += '?title=' + parameters.title;
     if (parameters.status != undefined) url += `&status=${parameters.status}`;
     if (parameters.importance != undefined) url += `&importance=${parameters.importance}`;
+    if (parameters.members != undefined) url += `&shareds=${parameters.members}`;
 
     const path = encodeURI(url);
     const method = API_PATHS_METHODS.modifyTask.method;
@@ -198,6 +206,33 @@ function createCustomField(parameters) {
   });
 }
 
+let queryGroups = function(groupId) {
+  return new Promise(function(resolve, reject) {
+    let url =
+      groupId != undefined
+        ? API_PATHS_METHODS.queryGroups.path.replace('{groupId}', groupId)
+        : API_PATHS_METHODS.queryGroups.path.replace('{groupId}', '');
+    const path = encodeURI(url);
+    const method = API_PATHS_METHODS.queryGroups.method;
+    const requestOptions = buildRequestOptions(path, method);
+    let req = https.request(requestOptions, function(res) {
+      let body = [];
+      res
+        .on('data', function(data) {
+          body.push(data);
+        })
+        .on('end', function() {
+          body = Buffer.concat(body);
+          resolve(JSON.parse(body.toString()).data);
+        })
+        .on('error', error => {
+          reject(error);
+        });
+    });
+    req.end();
+  });
+};
+
 function buildRequestOptions(path, method) {
   const requestOptions = {
     agent: false,
@@ -217,5 +252,6 @@ module.exports = {
   createFolder,
   getFolder,
   getFoldersTree,
-  createCustomField
+  createCustomField,
+  queryGroups
 };

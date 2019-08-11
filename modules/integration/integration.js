@@ -1,7 +1,12 @@
 const WRIKE = require('../wrike/wrike-task-api.js');
 const IBM_BPM = require('../ibm-bpm/bpm-task-api.js');
 const IBM_BPM_PROCESSES = require('../configuration/consts.js').IBM_BPM_PROCESSES;
-const CUSTOM_FIELDS_IDS = require('../configuration/consts.js').CUSTOM_FIELDS_IDS;
+const CUSTOM_FIELDS_IDS = require('../configuration/consts.js').INTEGRATION_VARIABLES
+  .CUSTOM_FIELDS_IDS;
+const IBM_BPM_INTEGRATION_FOLDER_TITLE = require('../configuration/consts.js').INTEGRATION_VARIABLES
+  .IBM_BPM_INTEGRATION_FOLDER_TITLE;
+const WRIKE_BPM_INTEGRATION_TEAM = require('../configuration/consts.js').INTEGRATION_VARIABLES
+  .WRIKE_BPM_INTEGRATION_TEAM;
 
 function prepareFolderIdsForRequest(arr) {
   let folderIds = '';
@@ -15,10 +20,21 @@ function prepareFolderIdsForRequest(arr) {
   return folderIds;
 }
 
-const IBM_BPM_INTEGRATION_FOLDER_TITLE = 'IBM BPM Integration';
+async function getMembers() {
+  let members = null;
+  let groups = await WRIKE.queryGroups();
+  await groups.forEach(group => {
+    if (group.title == WRIKE_BPM_INTEGRATION_TEAM) {
+      members = group.memberIds;
+    }
+  });
+  if (members == undefined || members.length < 1) throw 'No members in IBM BPM Integration group';
+  return members;
+}
 
 async function prepareIntegrationFolder() {
   let rootFolder;
+  const members = await getMembers();
   const wrikeFolderTree = await WRIKE.getFoldersTree();
   for (let i = 0; i < wrikeFolderTree.length; i++) {
     if (wrikeFolderTree[i].title == 'Root') {
@@ -40,10 +56,11 @@ async function prepareIntegrationFolder() {
   }
 
   if (ibm_bpm_integration_folder == null) {
-    ibm_bpm_integration_folder = await WRIKE.createFolder(
-      rootFolder.id,
-      IBM_BPM_INTEGRATION_FOLDER_TITLE
-    );
+    const folderParameters = {
+      title: IBM_BPM_INTEGRATION_FOLDER_TITLE,
+      members: members
+    };
+    ibm_bpm_integration_folder = await WRIKE.createFolder(rootFolder.id, folderParameters);
   }
 
   return ibm_bpm_integration_folder;
@@ -52,6 +69,7 @@ async function prepareIntegrationFolder() {
 async function createOrUpdateTasks(ibm_bpm_integration_folder) {
   let integrationChildFolders = [];
   let taskList = [];
+  let members = await getMembers();
   for (let i = 0; i < IBM_BPM_PROCESSES.length; i++) {
     let tasks = await IBM_BPM.getTaskList(IBM_BPM_PROCESSES[i]);
     taskList = [...taskList, ...tasks];
@@ -67,8 +85,6 @@ async function createOrUpdateTasks(ibm_bpm_integration_folder) {
     });
   }
 
-  console.log('TASKS LENGTH', taskList.length);
-
   for (let i = 0; i < taskList.length; i++) {
     let task = taskList[i];
     let isFolderExists = false;
@@ -80,9 +96,7 @@ async function createOrUpdateTasks(ibm_bpm_integration_folder) {
         break;
       }
     }
-    console.log('123123');
     if (isFolderExists) {
-      console.log('IS FOLDER EXIST');
       const wrikeTasks = await WRIKE.getTasksFromFolder(folderId);
       let updated = false;
       wrikeTasks.forEach(wrikeTask => {
@@ -92,38 +106,45 @@ async function createOrUpdateTasks(ibm_bpm_integration_folder) {
             if (customField.id == CUSTOM_FIELDS_IDS.taskId) taskId = customField.value;
           });
           if (taskId && task.taskId == taskId) {
-            const parameters = {
+            const taskParameters = {
               title: task.taskSubject,
               importance: task.priority,
-              status: task.taskStatus != 'Closed' ? 'Active' : 'Completed'
+              status: task.taskStatus != 'Closed' ? 'Active' : 'Completed',
+              members: members
             };
-            WRIKE.modifyTask(wrikeTask.id, parameters).then(task => console.log(task));
+            WRIKE.modifyTask(wrikeTask.id, taskParameters);
             updated = true;
           }
         }
       });
       if (updated === false) {
-        const parameters = {
+        const taskParameters = {
           title: task.taskSubject,
           taskId: task.taskId,
           importance: task.priority,
-          status: task.taskStatus != 'Closed' ? 'Active' : 'Completed'
+          status: task.taskStatus != 'Closed' ? 'Active' : 'Completed',
+          members: members
         };
-        console.log('createTask!@#');
-        WRIKE.createTask(folderId, parameters);
+        WRIKE.createTask(folderId, taskParameters);
       }
     } else {
-      let newProcessFolder = await WRIKE.createFolder(ibm_bpm_integration_folder.id, task.bpdName);
+      const folderParameters = {
+        title: task.bpdName,
+        members: members
+      };
+      let newProcessFolder = await WRIKE.createFolder(
+        ibm_bpm_integration_folder.id,
+        folderParameters
+      );
       integrationChildFolders.push(newProcessFolder);
-      const parameters = {
+      const taskParameters = {
         title: task.taskSubject,
         taskId: task.taskId,
         importance: task.priority,
-        status: task.taskStatus != 'Closed' ? 'Active' : 'Completed'
+        status: task.taskStatus != 'Closed' ? 'Active' : 'Completed',
+        members: members
       };
-      console.log('createFolder');
-      WRIKE.createTask(newProcessFolder.id, parameters);
-      // add or update task
+      WRIKE.createTask(newProcessFolder.id, taskParameters);
     }
   }
 }
