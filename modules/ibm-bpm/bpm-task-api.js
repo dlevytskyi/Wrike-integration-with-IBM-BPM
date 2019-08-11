@@ -3,16 +3,16 @@ const IBM_BPM_CONFIG = require('../configuration/consts.js').IBM_BPM_CONFIG;
 const IBM_BPM_API_PATHS_METHODS = require('../configuration/consts.js')
   .IBM_BPM_API_PATHS_AND_METHODS;
 
-let getTaskList = function () {
+let getTaskList = function (bpdName) {
   return new Promise(function (resolve, reject) {
     const path = encodeURI(
       IBM_BPM_API_PATHS_METHODS.getTaskList.path +
-      '?condition=taskStatus|NotEquals|Closed' +
+      '?condition=bpdName|' + bpdName +
       '&organization=byTask&run=true' +
       '&shared=false' +
       '&filterByCurrentUser=false'
     );
-
+    console.log(path);
     const method = IBM_BPM_API_PATHS_METHODS.getTaskList.method;
     const requestOptions = buildRequestOptions(path, method);
 

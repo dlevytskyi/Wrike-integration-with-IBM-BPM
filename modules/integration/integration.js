@@ -51,7 +51,11 @@ async function prepareIntegrationFolder() {
 
 async function createOrUpdateTasks(ibm_bpm_integration_folder) {
   let integrationChildFolders = [];
-  const taskList = await IBM_BPM.getTaskList();
+  let taskList = [];
+  for (let i = 0; i < IBM_BPM_PROCESSES.length; i++) {
+    let tasks = await IBM_BPM.getTaskList(IBM_BPM_PROCESSES[i]);
+    taskList = [...taskList, ...tasks];
+  }
 
   if (ibm_bpm_integration_folder.childIds && ibm_bpm_integration_folder.childIds.length > 0) {
     let folderIdsForRequest = [];
@@ -65,59 +69,55 @@ async function createOrUpdateTasks(ibm_bpm_integration_folder) {
 
   for (let i = 0; i < taskList.length; i++) {
     let task = taskList[i];
-    console.log(task);
-    let isProcessHandled = IBM_BPM_PROCESSES.includes(task.bpdName);
-    if (isProcessHandled) {
-      let isFolderExists = false;
-      let folderId = null;
-      for (let j = 0; j < integrationChildFolders.length; j++) {
-        if (integrationChildFolders[j] && integrationChildFolders[j].title == task.bpdName) {
-          isFolderExists = true;
-          folderId = integrationChildFolders[j].id;
-          break;
-        }
+    let isFolderExists = false;
+    let folderId = null;
+    for (let j = 0; j < integrationChildFolders.length; j++) {
+      if (integrationChildFolders[j] && integrationChildFolders[j].title == task.bpdName) {
+        isFolderExists = true;
+        folderId = integrationChildFolders[j].id;
+        break;
       }
-      console.log('123123');
-      if (isFolderExists) {
-        const wrikeTasks = await WRIKE.getTasksFromFolder(folderId);
-        let updated = false;
-        wrikeTasks.forEach(wrikeTask => {
-          if (wrikeTask.customFields && wrikeTask.customFields.length > 0) {
-            let taskId = null;
-            wrikeTask.customFields.forEach(customField => {
-              if (customField.id == CUSTOM_FIELDS_IDS.taskId) taskId = customField.value;
-            });
-            if (taskId && task.taskId == taskId) {
-              //modify task
-              updated = true;
-            }
+    }
+    console.log('123123');
+    if (isFolderExists) {
+      const wrikeTasks = await WRIKE.getTasksFromFolder(folderId);
+      let updated = false;
+      wrikeTasks.forEach(wrikeTask => {
+        if (wrikeTask.customFields && wrikeTask.customFields.length > 0) {
+          let taskId = null;
+          wrikeTask.customFields.forEach(customField => {
+            if (customField.id == CUSTOM_FIELDS_IDS.taskId) taskId = customField.value;
+          });
+          if (taskId && task.taskId == taskId) {
+            //modify task
+            updated = true;
           }
-        });
-        if (updated === false) {
-          const parameters = {
-            title: task.taskSubject,
-            taskId: task.taskId,
-            importance: task.priority,
-            status: task.taskStatus != 'Closed' ? 'Active' : 'Completed'
-          };
-          WRIKE.createTask(folderId, parameters);
         }
-      } else {
-        let newProcessFolder = await WRIKE.createFolder(
-          ibm_bpm_integration_folder.id,
-          task.bpdName
-        );
-        integrationChildFolders.push(newProcessFolder);
+      });
+      if (updated === false) {
         const parameters = {
           title: task.taskSubject,
           taskId: task.taskId,
           importance: task.priority,
           status: task.taskStatus != 'Closed' ? 'Active' : 'Completed'
         };
-        console.log('createFolder');
-        WRIKE.createTask(newProcessFolder.id, parameters);
-        // add or update task
+        WRIKE.createTask(folderId, parameters);
       }
+    } else {
+      let newProcessFolder = await WRIKE.createFolder(
+        ibm_bpm_integration_folder.id,
+        task.bpdName
+      );
+      integrationChildFolders.push(newProcessFolder);
+      const parameters = {
+        title: task.taskSubject,
+        taskId: task.taskId,
+        importance: task.priority,
+        status: task.taskStatus != 'Closed' ? 'Active' : 'Completed'
+      };
+      console.log('createFolder');
+      WRIKE.createTask(newProcessFolder.id, parameters);
+      // add or update task
     }
   }
 }
