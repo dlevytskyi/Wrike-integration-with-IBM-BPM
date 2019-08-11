@@ -2,71 +2,71 @@ let https = require('https');
 const IBM_BPM_CONFIG = require('../configuration/consts.js').IBM_BPM_CONFIG;
 const IBM_BPM_API_PATHS_METHODS = require('../configuration/consts.js')
   .IBM_BPM_API_PATHS_AND_METHODS;
+const Logger = require('../logger/logger.js');
+const logger = new Logger().getInstance();
 
-let getTaskList = function (bpdName) {
-  return new Promise(function (resolve, reject) {
+let getTaskList = function(bpdName) {
+  return new Promise(function(resolve, reject) {
+    logger.info('[BPM] GET TASK LIST');
     const path = encodeURI(
       IBM_BPM_API_PATHS_METHODS.getTaskList.path +
-      '?condition=bpdName|' + bpdName +
-      '&organization=byTask&run=true' +
-      '&shared=false' +
-      '&filterByCurrentUser=false'
+        '?condition=bpdName|' +
+        bpdName +
+        '&organization=byTask&run=true' +
+        '&shared=false' +
+        '&filterByCurrentUser=false'
     );
-    console.log(path);
     const method = IBM_BPM_API_PATHS_METHODS.getTaskList.method;
     const requestOptions = buildRequestOptions(path, method);
 
-    let req = https.request(requestOptions, function (res) {
+    let req = https.request(requestOptions, function(res) {
       let body = [];
       res
-        .on('data', function (data) {
+        .on('data', function(data) {
           body.push(data);
         })
-        .on('end', function () {
+        .on('end', function() {
           body = Buffer.concat(body);
           resolve(JSON.parse(body.toString()).data.data);
         })
         .on('error', error => {
+          logger.info(`[BPM] GET TASK LIST ERROR:${error}`);
           reject(error);
         });
     });
     req.end();
   });
-}
+};
 
 function getUserDetails(userName) {
+  logger.info('[BPM] GET USER DETAILS');
   const path = encodeURI(
     IBM_BPM_API_PATHS_METHODS.getUserDetails.path +
-    '?userName=' +
-    userName +
-    '&includeInternalMemberships=true' +
-    '&refreshUser=false' +
-    '&includeEditableUserPreferences=false' +
-    '&parts=all'
+      '?userName=' +
+      userName +
+      '&includeInternalMemberships=true' +
+      '&refreshUser=false' +
+      '&includeEditableUserPreferences=false' +
+      '&parts=all'
   );
 
   const method = IBM_BPM_API_PATHS_METHODS.getUserDetails.method;
   const requestOptions = buildRequestOptions(path, method);
 
-  let req = https.request(requestOptions, function (res) {
+  let req = https.request(requestOptions, function(res) {
     let body = [];
     res
-      .on('data', function (data) {
+      .on('data', function(data) {
         body.push(data);
       })
-      .on('end', function () {
+      .on('end', function() {
         body = Buffer.concat(body);
         let data = JSON.parse(body.toString()).data;
-        //console.log('!!!!!!!!!!!!!!');
-        //console.dir(data);
         return data;
       });
   });
   req.end();
 }
-
-//getUserDetails('mkmich');
-//getTaskList();
 
 function buildRequestOptions(path, method) {
   const requestOptions = {

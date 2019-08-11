@@ -7,6 +7,8 @@ const IBM_BPM_INTEGRATION_FOLDER_TITLE = require('../configuration/consts.js').I
   .IBM_BPM_INTEGRATION_FOLDER_TITLE;
 const WRIKE_BPM_INTEGRATION_TEAM = require('../configuration/consts.js').INTEGRATION_VARIABLES
   .WRIKE_BPM_INTEGRATION_TEAM;
+const Logger = require('../logger/logger.js');
+const logger = new Logger().getInstance();
 
 function prepareFolderIdsForRequest(arr) {
   let folderIds = '';
@@ -21,6 +23,7 @@ function prepareFolderIdsForRequest(arr) {
 }
 
 async function getMembers() {
+  logger.info('GET MEMBERS');
   let members = null;
   let groups = await WRIKE.queryGroups();
   await groups.forEach(group => {
@@ -33,6 +36,7 @@ async function getMembers() {
 }
 
 async function prepareIntegrationFolder() {
+  logger.info('PREPARE INTEGRATION FOLDER');
   let rootFolder;
   const members = await getMembers();
   const wrikeFolderTree = await WRIKE.getFoldersTree();
@@ -67,6 +71,7 @@ async function prepareIntegrationFolder() {
 }
 
 async function createOrUpdateTasks(ibm_bpm_integration_folder) {
+  logger.info('TASK ACTUALIZATION (CREATE OR UPDATE)');
   let integrationChildFolders = [];
   let taskList = [];
   let members = await getMembers();
@@ -97,6 +102,7 @@ async function createOrUpdateTasks(ibm_bpm_integration_folder) {
       }
     }
     if (isFolderExists) {
+      logger.info('PROCESS FOLDER EXIST');
       const wrikeTasks = await WRIKE.getTasksFromFolder(folderId);
       let updated = false;
       wrikeTasks.forEach(wrikeTask => {
@@ -128,6 +134,7 @@ async function createOrUpdateTasks(ibm_bpm_integration_folder) {
         WRIKE.createTask(folderId, taskParameters);
       }
     } else {
+      logger.info('CREATE PROCESS FOLDER');
       const folderParameters = {
         title: task.bpdName,
         members: members

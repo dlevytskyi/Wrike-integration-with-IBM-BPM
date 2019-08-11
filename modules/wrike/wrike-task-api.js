@@ -1,9 +1,12 @@
 let https = require('https');
 const WRIKE_CONFIG = require('../configuration/consts.js').WRIKE_CONFIG;
 const API_PATHS_METHODS = require('../configuration/consts.js').WRIKE_API_PATHS_AND_METHODS;
+const Logger = require('../logger/logger.js');
+const logger = new Logger().getInstance();
 
 let getFoldersTree = function() {
   return new Promise(function(resolve, reject) {
+    logger.info('[WRIKE] GET FOLDER TREE');
     const path = API_PATHS_METHODS.getFoldersTree.path;
     const method = API_PATHS_METHODS.getFoldersTree.method;
     const requestOptions = buildRequestOptions(path, method);
@@ -18,6 +21,7 @@ let getFoldersTree = function() {
           resolve(JSON.parse(body.toString()).data);
         })
         .on('error', error => {
+          logger.error(`[WRIKE] GET FOLDER TREE ERRPR:${error}`);
           reject(error);
         });
     });
@@ -27,6 +31,7 @@ let getFoldersTree = function() {
 
 let getFolder = function(folderId) {
   return new Promise(function(resolve, reject) {
+    logger.info('[WRIKE] GET FOLDER');
     const path = API_PATHS_METHODS.getFolder.path.replace('{folderId}', folderId);
     const method = API_PATHS_METHODS.getFolder.method;
     const requestOptions = buildRequestOptions(path, method);
@@ -41,6 +46,7 @@ let getFolder = function(folderId) {
           resolve(JSON.parse(body.toString()).data);
         })
         .on('error', error => {
+          logger.error(`[WRIKE] GET FOLDER ERROR:${error}}`);
           reject(error);
         });
     });
@@ -50,6 +56,7 @@ let getFolder = function(folderId) {
 
 function createFolder(folderId, parameters) {
   return new Promise(function(resolve, reject) {
+    logger.info('[WRIKE] CREATE FOLDER');
     let url = API_PATHS_METHODS.createFolder.path.replace('{folderId}', folderId);
 
     //BUILD URL
@@ -72,6 +79,7 @@ function createFolder(folderId, parameters) {
           resolve(JSON.parse(body.toString()).data[0]);
         })
         .on('error', error => {
+          logger.error(`[WRIKE] CREATE FOLDER ERROR:${error}`);
           reject(error);
         });
     });
@@ -80,6 +88,7 @@ function createFolder(folderId, parameters) {
 }
 
 let getTasksFromFolder = function(folderId) {
+  logger.info('[WRIKE] GET TASKS FROM FOLDER');
   return new Promise(function(resolve, reject) {
     let url = API_PATHS_METHODS.getTasksFromFolder.path.replace('{folderId}', folderId);
     url += '?fields=["customFields"]';
@@ -97,6 +106,7 @@ let getTasksFromFolder = function(folderId) {
           resolve(JSON.parse(body.toString()).data);
         })
         .on('error', error => {
+          logger.error(`[WRIKE] GET TASKS FROM FOLDER ERROR:${error}`);
           reject(error);
         });
     });
@@ -105,6 +115,7 @@ let getTasksFromFolder = function(folderId) {
 };
 
 let createTask = function(folderId, parameters) {
+  logger.info('[WRIKE] CREATE TASK');
   return new Promise(function(resolve, reject) {
     if (parameters == undefined) throw 'Function createTask: emptry parameters';
 
@@ -134,6 +145,7 @@ let createTask = function(folderId, parameters) {
           resolve(JSON.parse(body.toString()).data);
         })
         .on('error', error => {
+          logger.error(`[WRIKE] CREATE TASK ERROR:${error}`);
           reject(error);
         });
     });
@@ -142,6 +154,7 @@ let createTask = function(folderId, parameters) {
 };
 
 let modifyTask = function(taskId, parameters) {
+  logger.info('[WRIKE] MODIFY TASK');
   return new Promise(function(resolve, reject) {
     if (parameters == undefined) throw 'Function createTask: emptry parameters';
 
@@ -167,6 +180,7 @@ let modifyTask = function(taskId, parameters) {
           resolve(JSON.parse(body.toString()).data);
         })
         .on('error', error => {
+          logger.error(`[WRIKE] MODIFY TASK ERROR:${error}`);
           reject(error);
         });
     });
@@ -175,6 +189,7 @@ let modifyTask = function(taskId, parameters) {
 };
 
 function createCustomField(parameters) {
+  logger.info('[WRIKE] CREATE CUSTOM FIELD');
   return new Promise(function(resolve, reject) {
     let url = API_PATHS_METHODS.createCustomField.path;
 
@@ -199,6 +214,7 @@ function createCustomField(parameters) {
           resolve(JSON.parse(body.toString()).data);
         })
         .on('error', error => {
+          logger.error(`[WRIKE] CREATE CUSTOM FIELD ERROR:${error}`);
           reject(error);
         });
     });
@@ -208,6 +224,7 @@ function createCustomField(parameters) {
 
 let queryGroups = function(groupId) {
   return new Promise(function(resolve, reject) {
+    logger.info('[WRIKE] QUERY GROUPS');
     let url =
       groupId != undefined
         ? API_PATHS_METHODS.queryGroups.path.replace('{groupId}', groupId)
@@ -226,6 +243,7 @@ let queryGroups = function(groupId) {
           resolve(JSON.parse(body.toString()).data);
         })
         .on('error', error => {
+          logger.info(`[WRIKE] QUERY GROUPS ERROR:${error}`);
           reject(error);
         });
     });
