@@ -60,9 +60,9 @@ async function createOrUpdateTasks(ibm_bpm_integration_folder) {
     });
   }
 
-
   for (let i = 0; i < taskList.length; i++) {
     let task = taskList[i];
+    console.log(task);
     let isProcessHandled = IBM_BPM_PROCESSES.includes(task.bpdName);
     if (isProcessHandled) {
       let isFolderExists = false;
@@ -91,4 +91,3 @@ async function mainApp() {
 }
 
 mainApp();
-
