@@ -15,10 +15,10 @@ function prepareFolderIdsForRequest(arr) {
 }
 
 const IBM_BPM_INTEGRATION_FOLDER_TITLE = 'IBM BPM Integration';
-let getFoldersTree = WRIKE.getFoldersTree;
-let getFolder = WRIKE.getFolder;
-let createFolder = WRIKE.createFolder;
-let getTaskList = IBM_BPM.getTaskList;
+const getFoldersTree = WRIKE.getFoldersTree;
+const getFolder = WRIKE.getFolder;
+const createFolder = WRIKE.createFolder;
+const getTaskList = IBM_BPM.getTaskList;
 
 
 
@@ -78,6 +78,7 @@ async function mainApp() {
       } else {
         let newProcessFolder = await createFolder(ibm_bpm_integration_folder.id, task.bpdName);
         integrationChildFolders.push(newProcessFolder);
+        // add or update task
       }
     }
   }
