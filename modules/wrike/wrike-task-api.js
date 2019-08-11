@@ -130,6 +130,11 @@ let createTask = function(folderId, parameters) {
     url += `&status=${parameters.status}`;
     if (parameters.members == undefined) throw 'CreateTask: group members are required';
     url += `&shareds=[${parameters.members}]`;
+    let description = `Claim task on Process Portal: https://bawtrialus.bpm.ibmcloud.com/baw/dev/ProcessPortal/launchTaskCompletion?taskId=${
+      parameters.taskId
+    }`;
+    url += `&description=${description}`;
+
     if (parameters.importance != undefined) url += `&importance=${parameters.importance}`;
     const path = encodeURI(url);
     const method = API_PATHS_METHODS.createTask.method;
@@ -156,7 +161,7 @@ let createTask = function(folderId, parameters) {
 let modifyTask = function(taskId, parameters) {
   logger.info('[WRIKE] MODIFY TASK');
   return new Promise(function(resolve, reject) {
-    if (parameters == undefined) throw 'Function createTask: emptry parameters';
+    if (parameters == undefined) throw 'Function modify task: emptry parameters';
 
     let url = API_PATHS_METHODS.modifyTask.path.replace('{taskId}', taskId);
 
@@ -164,8 +169,7 @@ let modifyTask = function(taskId, parameters) {
     if (parameters.title != undefined) url += '?title=' + parameters.title;
     if (parameters.status != undefined) url += `&status=${parameters.status}`;
     if (parameters.importance != undefined) url += `&importance=${parameters.importance}`;
-    if (parameters.members != undefined) url += `&shareds=${parameters.members}`;
-
+    if (parameters.members != undefined) url += `&addShareds=[${parameters.members}]`;
     const path = encodeURI(url);
     const method = API_PATHS_METHODS.modifyTask.method;
     const requestOptions = buildRequestOptions(path, method);

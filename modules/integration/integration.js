@@ -114,7 +114,8 @@ async function createOrUpdateTasks(ibm_bpm_integration_folder) {
           if (taskId && task.taskId == taskId) {
             const taskParameters = {
               title: task.taskSubject,
-              importance: task.priority,
+              taskId: task.taskId,
+              importance: task.taskPriority,
               status: task.taskStatus != 'Closed' ? 'Active' : 'Completed',
               members: members
             };
@@ -127,7 +128,7 @@ async function createOrUpdateTasks(ibm_bpm_integration_folder) {
         const taskParameters = {
           title: task.taskSubject,
           taskId: task.taskId,
-          importance: task.priority,
+          importance: task.taskPriority,
           status: task.taskStatus != 'Closed' ? 'Active' : 'Completed',
           members: members
         };
