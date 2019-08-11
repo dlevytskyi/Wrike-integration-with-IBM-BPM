@@ -1,6 +1,6 @@
 const APP_CONFIG = require('./modules/configuration/consts.js').APP_CONFIG;
 const INTEGRATION = require('./modules/integration/integration.js');
-const Logger = require('../logger/logger.js');
+const Logger = require('./modules/logger/logger.js');
 const logger = new Logger().getInstance();
 
 async function mainApp() {
