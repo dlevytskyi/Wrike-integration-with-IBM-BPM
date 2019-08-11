@@ -32,6 +32,10 @@ const WRIKE_API_PATHS_AND_METHODS = {
     path: '/folders/{folderId}/tasks',
     method: 'POST'
   },
+  modifyTask: {
+    path: '/tasks/{taskId}',
+    method: 'PUT'
+  },
   createCustomField: {
     path: '/customfields',
     method: 'POST'
