@@ -63,7 +63,7 @@ const IBM_BPM_API_PATHS_AND_METHODS = {
   }
 };
 
-const IBM_BPM_PROCESSES = ['Standard HR Open New Position', 'Advanced HR Open New Position'];
+const IBM_BPM_PROCESSES = ['Credit Approval Process', 'Win Wrike Contest Process'];
 const CUSTOM_FIELDS_IDS = {
   taskId: 'IEAC3OXWJUABBTIG'
 };
