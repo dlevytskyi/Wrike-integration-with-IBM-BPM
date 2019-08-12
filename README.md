@@ -4,6 +4,8 @@
 
 Application integrate and synchronize tasks betweend two systems: Wrike and IBM BPM.
 
+[Video Presentation](https://youtu.be/lCCmXGDqZsc)
+
 Extension ask IBM BPM application about new task every some configurable period.
 
 Extension create in Wrike 'Shared with me folder' next structure:
